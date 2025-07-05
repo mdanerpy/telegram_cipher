@@ -5,6 +5,7 @@ from telegram.ext import (
 )
 from cipher_core import process
 import os
+import asyncio
 
 # توکن از متغیر محیطی خوانده می‌شود
 TOKEN = os.getenv("BOT_TOKEN")
@@ -52,5 +53,11 @@ async def main():
     await app.run_polling()
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    try:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
+    except RuntimeError as e:
+        if "already running" in str(e):
+            asyncio.ensure_future(main())
+        else:
+            raise
