@@ -10,6 +10,7 @@ import asyncio
 # توکن از متغیر محیطی خوانده می‌شود
 TOKEN = os.getenv("BOT_TOKEN")
 
+# هندلر پیام‌ها
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
 
@@ -31,6 +32,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "یا رمزگشایی با راهنما:\n(5+:م){...}*"
         )
 
+# هندلر /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "سلام! من ربات رمزگذار مدنرچ هستم. 🧠\n\n"
@@ -42,6 +44,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "رمزگشایی - (5+:م){四风啊...}*"
     )
 
+# تابع اصلی
 async def main():
     print("🚀 ربات در حال اجراست...")
 
@@ -52,6 +55,7 @@ async def main():
 
     await app.run_polling()
 
+# اجرای امن بدون خطای event loop
 if __name__ == "__main__":
     try:
         loop = asyncio.get_event_loop()
@@ -59,5 +63,6 @@ if __name__ == "__main__":
     except RuntimeError as e:
         if "already running" in str(e):
             asyncio.ensure_future(main())
+            loop.run_forever()
         else:
             raise
