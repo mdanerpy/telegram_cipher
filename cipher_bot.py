@@ -55,14 +55,6 @@ async def main():
 
     await app.run_polling()
 
-# اجرای امن بدون خطای event loop
+# اجرای امن
 if __name__ == "__main__":
-    try:
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
-    except RuntimeError as e:
-        if "already running" in str(e):
-            asyncio.ensure_future(main())
-            loop.run_forever()
-        else:
-            raise
+    asyncio.run(main())
