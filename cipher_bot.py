@@ -15,19 +15,23 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if text.startswith("رمزگذاری -"):
         code = text.replace("رمزگذاری -", "").strip()
         result = process(code, mode='encode')
-        await update.message.reply_text("رمز گزاری و رمز گشایی با حروف چینی:\n" + result)
+        await update.message.reply_text(result, reply_to_message_id=update.message.message_id)
 
     elif text.startswith("رمزگشایی -"):
         code = text.replace("رمزگشایی -", "").strip()
         result = process(code, mode='decode')
-        await update.message.reply_text("رمز گزاری و رمز گشایی با حروف چینی:\n" + result)
+        await update.message.reply_text(result, reply_to_message_id=update.message.message_id)
 
     else:
         await update.message.reply_text(
             "❗️دستور نامعتبر.\n\n"
-            "رمزگذاری - 68+{سلام}*\n"
-            "رمزگشایی - 68+{四风啊...}*\n"
-            "یا رمزگشایی با راهنما:\n(5+:م){...}*"
+            "📌 رمزگذاری:\n"
+            "رمزگذاری - 68+{سلام}*\n\n"
+            "📌 رمزگشایی:\n"
+            "رمزگشایی - 68+{四风啊...}*\n\n"
+            "📌 رمزگشایی با راهنما:\n"
+            "رمزگشایی - (5+:م){四风啊...}*",
+            reply_to_message_id=update.message.message_id
         )
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -51,7 +55,7 @@ async def main():
 
     await app.run_polling()
 
-# 🚧 ترفند اجرای امن در Render یا محیط‌هایی با event loop فعال
+# 🚧 اجرای امن برای محیط‌هایی مثل Render
 if __name__ == "__main__":
     try:
         import nest_asyncio
