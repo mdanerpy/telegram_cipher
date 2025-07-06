@@ -7,10 +7,8 @@ from cipher_core import process
 import os
 import asyncio
 
-# توکن از متغیر محیطی خوانده می‌شود
 TOKEN = os.getenv("BOT_TOKEN")
 
-# هندلر پیام‌ها
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
 
@@ -32,7 +30,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "یا رمزگشایی با راهنما:\n(5+:م){...}*"
         )
 
-# هندلر /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "سلام! من ربات رمزگذار مدنرچ هستم. 🧠\n\n"
@@ -44,7 +41,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "رمزگشایی - (5+:م){四风啊...}*"
     )
 
-# تابع اصلی
 async def main():
     print("🚀 ربات در حال اجراست...")
 
@@ -55,6 +51,13 @@ async def main():
 
     await app.run_polling()
 
-# اجرای امن
+# 🚧 ترفند اجرای امن در Render یا محیط‌هایی با event loop فعال
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        import nest_asyncio
+        nest_asyncio.apply()
+        loop = asyncio.get_event_loop()
+        loop.create_task(main())
+        loop.run_forever()
+    except Exception as e:
+        print(f"❌ خطا هنگام اجرای ربات: {e}")
