@@ -1,5 +1,6 @@
 import os
-from telegram import Update, BotCommand, ParseMode
+from telegram import Update, BotCommand
+from telegram.constants import ParseMode
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -8,20 +9,17 @@ from telegram.ext import (
     ContextTypes,
 )
 
-from cipher_core import process  # تابع رمزگذاری/رمزگشایی تو اینجا باشه
+from cipher_core import process  # تابع رمزگذاری/رمزگشایی
 
-TOKEN = os.getenv("BOT_TOKEN")         # توکن ربات تلگرام
-WEBHOOK_URL = os.getenv("WEBHOOK_URL") # آدرس کامل وبهوک، مثلا: https://yourdomain.com/cipher_bot
+TOKEN = os.getenv("BOT_TOKEN")         # توکن ربات
+WEBHOOK_URL = os.getenv("WEBHOOK_URL") # آدرس کامل وبهوک
 
 START_MESSAGE = (
-    "سلام! من ربات رمزگذاری cipher_bot هستم. 🧠\n\n"
+    "سلام! من ربات رمزگذار cipher_bot هستم. 🧠\n\n"
     "📌 رمزگذاری:\n"
     "`رمزگذاری - 68+{متن شما}*`\n\n"
     "📌 رمزگشایی:\n"
     "`رمزگشایی - {...}*`\n\n"
-    # این بخش در راهنما مخفیه
-    # "📌 رمزگشایی با استفاده از یک حرف:\n"
-    # "`(۸۷+:ت){متن}*`\n\n"
     "لطفاً پیام‌ها را دقیق ارسال کنید."
 )
 
@@ -52,7 +50,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     else:
         msg = (
-            "❗️ دستور نامعتبر.\n\n"
+            "❗️دستور نامعتبر.\n\n"
             "📌 رمزگذاری:\n"
             "`رمزگذاری - 68+{سلام}*`\n\n"
             "📌 رمزگشایی:\n"
@@ -75,10 +73,9 @@ async def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
 
-    # راه‌اندازی وبهوک برای پایداری دائمی
+    # اجرای امن با وبهوک
     await app.start()
     await app.bot.set_webhook(WEBHOOK_URL)
-    # حذف run_polling برای اینکه فقط webhook استفاده بشه
     await app.updater.idle()
 
 if __name__ == "__main__":
