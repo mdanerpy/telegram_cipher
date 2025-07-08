@@ -5,17 +5,16 @@ from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
     MessageHandler,
-    filters,
     ContextTypes,
+    filters,
 )
-
-from cipher_core import process  # تابع رمزگذاری/رمزگشایی
+from cipher_core import process
 
 TOKEN = os.getenv("BOT_TOKEN")         # توکن ربات
-WEBHOOK_URL = os.getenv("WEBHOOK_URL") # آدرس کامل وبهوک
+WEBHOOK_URL = os.getenv("WEBHOOK_URL") # آدرس وبهوک مثل https://yourname.onrender.com/webhook
 
 START_MESSAGE = (
-    "سلام! من ربات رمزگذار cipher_bot هستم. 🧠\n\n"
+    "سلام! من ربات رمزگذاری cipher_bot هستم. 🧠\n\n"
     "📌 رمزگذاری:\n"
     "`رمزگذاری - 68+{متن شما}*`\n\n"
     "📌 رمزگشایی:\n"
@@ -26,7 +25,7 @@ START_MESSAGE = (
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         START_MESSAGE,
-        parse_mode=ParseMode.MARKDOWN_V2,
+        parse_mode=ParseMode.MARKDOWN_V2
     )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -37,7 +36,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         result = process(code, mode='encode')
         await update.message.reply_text(
             result,
-            reply_to_message_id=update.message.message_id,
+            reply_to_message_id=update.message.message_id
         )
 
     elif text.startswith("رمزگشایی -"):
@@ -45,12 +44,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         result = process(code, mode='decode')
         await update.message.reply_text(
             result,
-            reply_to_message_id=update.message.message_id,
+            reply_to_message_id=update.message.message_id
         )
 
     else:
         msg = (
-            "❗️دستور نامعتبر.\n\n"
+            "❗️ دستور نامعتبر.\n\n"
             "📌 رمزگذاری:\n"
             "`رمزگذاری - 68+{سلام}*`\n\n"
             "📌 رمزگشایی:\n"
@@ -60,7 +59,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             msg,
             parse_mode=ParseMode.MARKDOWN_V2,
-            reply_to_message_id=update.message.message_id,
+            reply_to_message_id=update.message.message_id
         )
 
 async def main():
@@ -73,10 +72,10 @@ async def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
 
-    # اجرای امن با وبهوک
+    # اتصال ربات به وبهوک
     await app.start()
     await app.bot.set_webhook(WEBHOOK_URL)
-    await app.updater.idle()
+    await app.wait_until_closed()
 
 if __name__ == "__main__":
     import asyncio
