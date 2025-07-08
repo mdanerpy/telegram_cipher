@@ -8,10 +8,10 @@ from telegram.ext import (
     ContextTypes,
     filters,
 )
-from cipher_core import process
+from cipher_core import process  # این فایل باید در کنار این فایل باشد
 
-TOKEN = os.getenv("BOT_TOKEN")         # توکن ربات
-WEBHOOK_URL = os.getenv("WEBHOOK_URL") # آدرس وبهوک مثل https://yourname.onrender.com/webhook
+TOKEN = os.getenv("BOT_TOKEN")         # توکن ربات تلگرام
+WEBHOOK_URL = os.getenv("WEBHOOK_URL") # آدرس کامل وبهوک، مثل https://yourname.onrender.com/webhook
 
 START_MESSAGE = (
     "سلام! من ربات رمزگذاری cipher_bot هستم. 🧠\n\n"
@@ -25,7 +25,8 @@ START_MESSAGE = (
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         START_MESSAGE,
-        parse_mode=ParseMode.MARKDOWN_V2
+        parse_mode=ParseMode.MARKDOWN_V2,
+        reply_to_message_id=update.message.message_id  # پیام راهنما در پاسخ به پیام کاربر
     )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -72,10 +73,9 @@ async def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
 
-    # اتصال ربات به وبهوک
     await app.start()
-    await app.bot.set_webhook(WEBHOOK_URL)
-    await app.wait_until_closed()
+    await app.bot.set_webhook(WEBHOOK_URL)  # اتصال به وبهوک
+    await app.wait_until_closed()           # منتظر بمان تا اتصال قطع شود (پایدار)
 
 if __name__ == "__main__":
     import asyncio
